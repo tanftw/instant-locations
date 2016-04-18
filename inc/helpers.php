@@ -34,7 +34,7 @@ function il_default_settings()
  */
 function il_setting( $field = null )
 {
- 	$settings = get_option( 'google_locations' );
+ 	$settings = get_option( 'instant_locations' );
 
  	$defaults = il_default_settings();
 
@@ -63,6 +63,11 @@ if ( ! function_exists('il_set_data') )
 
 		if ( ! is_array( $address_component ) && ! empty( $value ) )
 			$address_component = array($address_component => $value);
+
+		if ( isset( $address_component['lat'] ) && isset( $address_component['lng'] ) )
+			$address_component['geometry'] = $address_component['lat'] . ',' . $address_component['lng'];
+
+
 
 		$has_data = $wpdb->get_var( $wpdb->prepare( "
 			SELECT 1 
@@ -121,7 +126,7 @@ if ( ! function_exists( 'il_field' ) )
 	{
 		if ( isset( $data ) )
 			echo $data;
-
-		echo '';
+		else
+			echo '';
 	}
 }

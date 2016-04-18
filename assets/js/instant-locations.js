@@ -30,6 +30,10 @@
          * @return void
          */
         init: function () {
+
+            if (typeof window.geo_config != 'undefined')
+                this.config = window.geo_config;
+
             this.initAutoComplete();
         },
 
@@ -40,13 +44,11 @@
          */
         initAutoComplete: function () {
 
-            var autoComplete = '#address',
-                // Create alias of `this` keyword to use inside other functions
-                _this = this;
+            var _this = this;
 
             // For each auto complete field. Create and instance of google.maps.places.Autocomplete
             var autoComplete = new google.maps.places.Autocomplete(
-                ($('#address')[0]), // = document.getElementById
+                (document.getElementById('address')), // = document.getElementById
                 _this.config
             );
 
@@ -128,7 +130,7 @@
                     }
 
                     if (component.types.indexOf(fieldType) > -1) {
-                        val = ( longName ) ? component.long_name : component.short_name;
+                        val = (longName) ? component.long_name : component.short_name;
                         // Stop the function right after val has found
                         return false;
                     }
@@ -139,31 +141,4 @@
     };
 
     Instant_Locations.init();
-
-    //window.onload = function() {
-    //    var startPos;
-    //    var geoOptions = {
-    //        timeout: 10 * 1000
-    //    };
-    //
-    //    var geoSuccess = function(position) {
-    //        var lat = position.coords.latitude,
-    //            lng = position.coords.longitude;
-    //
-    //        $.get('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + lat + ',' + lng, function (data) {
-    //            var formatted_address = data.results[0].formatted_address;
-    //        });
-    //    };
-    //    var geoError = function(error) {
-    //        console.log('Error occurred. Error code: ' + error.code);
-    //        // error.code can be:
-    //        //   0: unknown error
-    //        //   1: permission denied
-    //        //   2: position unavailable (error response from location provider)
-    //        //   3: timed out
-    //    };
-    //
-    //    navigator.geolocation.getCurrentPosition(geoSuccess, geoError, geoOptions);
-    //};
-
 })(jQuery);

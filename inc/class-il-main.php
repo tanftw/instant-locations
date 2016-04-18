@@ -19,6 +19,17 @@ class IL_Main
 
         wp_register_script('instant-locations', IL_JS_URL . 'instant-locations.js', array('gmaps', 'jquery'), '1.0.0', true);
 
+
+        $geo_config = il_setting('geo_config');
+
+        if (empty($geo_config['componentRestrictions']['country']))
+        	unset($geo_config['componentRestrictions']);
+
+        if (empty($geo_config['types']))
+        	unset($geo_config['types']);
+
+        wp_localize_script( 'instant-locations', 'geo_config', $geo_config );
+
         wp_enqueue_script('instant-locations');
 	}
 

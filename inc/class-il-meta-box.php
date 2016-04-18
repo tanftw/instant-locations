@@ -27,7 +27,7 @@ class IL_Meta_Box
     {
         add_meta_box(
             'instant-locations',
-            __( '<span class="dashicons dashicons-location-alt"></span> Instant Locations', 'textdomain' ),
+            __( '<span class="dashicons dashicons-location-alt"></span> Instant Locations', 'instant-locations' ),
             array( $this, 'render_metabox' ),
             'post',
             'normal',
@@ -118,9 +118,16 @@ class IL_Meta_Box
 			<label class="form-label" for="intersection">Intersection</label>
 			<input type="text" class="form-control" id="intersection" name="location[intersection]" value="<?php il_field( $location['intersection'] ); ?>">
 		</div>
-		
-		<input type="hidden" name="foo" value="bar">
-		<?php
+
+		<?php 
+		$hidden_fields = array('street_address', 'colloquial_area', 'locality', 'sublocality', 'ward', 'neighborhood',
+			'premise', 'subpremise', 'natural_feature', 'airport', 'park', 'point_of_interest', 'post_box', 'floor',
+			'room', 'formatted_address', 'location_id', 'url');
+
+		foreach ( $hidden_fields as $field) : ?>
+			<input type="hidden" class="form-control" name="location[<?php echo $field ?>]" id="<?php echo $field ?>" value="<?php il_field( $location[$field] ); ?>">
+		<?php endforeach; 
+
         // Add nonce for security and authentication.
         wp_nonce_field( 'instant_locations', 'instant_locations_nonce_field' );
     }

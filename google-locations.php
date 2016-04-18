@@ -38,5 +38,4 @@ include IL_INC_DIR . 'class-il-main.php';
 new IL_Main;
 
 register_activation_hook( __FILE__, array( 'IL_Migration', 'up' ) );
-
 register_deactivation_hook( __FILE__, array( 'IL_Migration', 'down' ) );

@@ -41,7 +41,7 @@ class IL_Settings
 	 */
 	public function admin_init()
 	{
-		register_setting( 'google_locations', 'google_locations_settings' );
+		register_setting( 'instant_locations', 'instant_locations_settings' );
 
 		if ( ! isset( $_POST['_page_now'] ) || $_POST['_page_now'] != 'instant-locations' )
 			return;
@@ -56,16 +56,10 @@ class IL_Settings
 			if ( isset( $_POST[$key] ) )
 				$settings[$key] = $_POST[$key];
 		}
-
-		// Sanitize
-		$settings['mode'] 		= isset( $_POST['mode'] ) ? trim( $_POST['mode'] ) : 'basic';
-		$settings['app_id'] 	= isset( $_POST['app_id'] ) ? trim( $_POST['app_id'] ) : '';
-		$settings['auto_add'] 	= isset( $_POST['auto_add'] ) ? true : false;
-		$settings['sdk_locale'] = trim( $_POST['sdk_locale'] );
 		
 		$settings = apply_filters( 'il_settings_before_update', $settings );
-		
-		update_option( 'get_facebook_likes', $settings );
+
+		update_option( 'instant_locations', $settings );
 
 		// Redirect with success message
 		$_POST['_wp_http_referer'] = add_query_arg( 'success', 'true', $_POST['_wp_http_referer'] );
@@ -80,38 +74,13 @@ class IL_Settings
 	 */
 	public function admin_page()
 	{
+		$data = il_setting();
+
+		$geo_config_types = array('geocode', 'address', 'establishment', '(cities)', '(regions)');
 		?>
-		<script type="text/javascript">
-		jQuery( function($) {
-			$('[name="mode"], #auto_add').change(function (){
-				var modeSelected = $('[name="mode"]:checked').val();
-				var autoAdd 	 = $('#auto_add').is(':checked');
-
-				if ( modeSelected === 'advanced' ) 
-				{
-					$('#auto_add_section, #app_id_section').show();
-
-					if (autoAdd) {
-						$('#app_id_section, #sdk_locale_section').show();
-						$('#setup-guide').hide();
-					}
-					else {
-						$('#app_id_section, #sdk_locale_section').hide();
-						$('#setup-guide').show();
-					}
-				}
-				else 
-				{
-					$('#setup-guide, #auto_add_section, #app_id_section, #sdk_locale_section').hide();
-				}
-			});
-
-			$('[name="mode"], #auto_add').trigger('change');
-		});
-		</script>
 
 		<div class="wrap">
-			<h2><?php _e( 'Google Locations', 'instant-locations' ); ?></h2>
+			<h2><?php _e( 'Instant Locations', 'instant-locations' ); ?></h2>
 			
 			<?php 
 			// Display success message when settings saved
@@ -144,7 +113,7 @@ class IL_Settings
 			                    				<div>
 			                    					
 				                    				<label>
-														<input type="text" name="componentRestriction[country]" id="country" value="<?php echo il_setting('bar'); ?>" />
+														<input type="text" name="geo_config[componentRestrictions][country]" id="country" value="<?php il_field($data['geo_config']['componentRestrictions']['country']); ?>" />
 													</label>
 				                    				<p class="description">
 				                    					<?php 
@@ -159,21 +128,11 @@ class IL_Settings
 			                    			<th><?php _e( 'Types', 'instant-locations' ); ?></th>
 			                    			<td>
 			                    				<div>
+			                    					<?php foreach ($geo_config_types as $type) : ?>
 			                    					<label>
-														<input type="radio" name="type" value="establishment" /> Geocode
+														<input type="checkbox" name="geo_config[types][]" value="<?php echo $type ?>" <?php if ( ! empty($data['geo_config']['types'] ) && in_array( $type, (array) $data['geo_config']['types'] ) ) echo 'checked'; ?> /> <?php echo $type ?>
 													</label><br>
-													<label>
-														<input type="radio" name="type" value="establishment" /> Address
-													</label><br>
-													<label>
-														<input type="radio" name="type" value="establishment" /> Establishment
-													</label><br>
-													<label>
-														<input type="radio" name="type" value="establishment" /> Regions
-													</label><br>
-				                    				<label>
-														<input type="radio" name="type" value="establishment" /> Cities
-													</label><br>
+													<?php endforeach; ?>
 				                    				<p class="description">
 				                    					<?php 
 				                    					_e( 'Specifies an explicit type or a type collection. Select none if you not sure.' );
@@ -197,7 +156,7 @@ class IL_Settings
 			                    				<div>
 
 				                    				<label>
-														<input type="text" name="api_key" id="api_key" value="<?php echo il_setting('api_key'); ?>" />
+														<input type="text" name="api_key" id="api_key" value="<?php il_field($data['api_key']); ?>" />
 													</label>
 				                    				<p class="description">
 				                    					<?php 
@@ -207,32 +166,6 @@ class IL_Settings
 			                    				</div>
 			                    			</td>
 			                    		</tr>
-			                    	</table>
-			                  	</div><!--.inside-->
-			              	</div><!--.postbox-->
-
-
-			              	<div class="postbox">
-			                	<div class="handlediv" title="Click to toggle"> <br></div>
-			                  	<h3 class="hndle ui-sortable-handle"><?php _e( 'Fields Settings', 'instant-locations' ); ?></h3>
-			                  	<div class="inside">
-			                    	<table class="form-table">
-			                    		<thead>
-			                    			<tr>
-			                    				<th>Field</th>
-			                    				<th>Show?</th>
-			                    				<th>Long Name?</th>
-			                    				<th>Title</th>		              
-			                    			</tr>
-			                    		</thead>
-			                    		<tbody>
-				                    		<tr>
-				                    			<td>administrative_area_level_1</td>
-				                    			<td><input type="checkbox"></td>
-				                    			<td><input type="checkbox"></td>
-				                    			<td>State</td>
-				                    		</tr>
-			                    		</tbody>
 			                    	</table>
 			                  	</div><!--.inside-->
 			              	</div><!--.postbox-->
