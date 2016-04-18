@@ -1,0 +1,27 @@
+.form-label{
+	width: 200px;
+	display: inline-block;
+}
+
+.row {
+	width: 100%;
+	display: block;
+	padding: 5px 0;
+}
+.row .column{
+	width: 30%;
+	margin-right: 2%;
+	display: inline-block;
+}
+.row .column:last-child{
+	margin-right: 0;
+}
+
+#address {
+	width: 100%;
+	padding: 7px 10px;
+}
+
+#form-group-address{
+	margin-bottom: 10px;
+}

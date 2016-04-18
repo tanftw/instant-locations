@@ -19,6 +19,7 @@ if ( ! defined( 'GL_URL' ) )
 	define( 'GL_URL', plugin_dir_url( __FILE__ ) );
 
 define( 'GL_JS_URL', trailingslashit( GL_URL . 'assets/js' ) );
+define( 'GL_CSS_URL', trailingslashit( GL_URL . 'assets/css' ) );
 // ------------------------------------------------------------
 // Plugin paths, for including files
 // ------------------------------------------------------------
@@ -35,6 +36,7 @@ include GL_INC_DIR . 'class-gl-meta-box.php';
 include GL_INC_DIR . 'class-gl-main.php';
 
 new GL_Main;
+
 register_activation_hook( __FILE__, array( 'GL_Migration', 'up' ) );
+
 register_deactivation_hook( __FILE__, array( 'GL_Migration', 'down' ) );
-add_action( 'plugins_loaded', array('GL_Migration', 'check') );

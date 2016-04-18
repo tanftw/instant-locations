@@ -24,7 +24,7 @@ class GL_Migration
 
             $sql = "CREATE TABLE {$table_name} (
                 id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-                object_name VARCHAR(50) NOT NULL DEFAULT 'post',
+                object_type VARCHAR(50) NOT NULL DEFAULT 'post',
                 object_id INT(11) UNSIGNED NOT NULL,
                 lat VARCHAR(30),
                 lng VARCHAR(30),
