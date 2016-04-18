@@ -8,7 +8,7 @@
 
     'use strict';
 
-    var Google_Location = {
+    var Instant_Locations = {
 
         /**
          * Store instances of google.maps.places.Autocomplete
@@ -61,7 +61,7 @@
                         // What data is prepared to bind to that field
                         var dataBinding = $(this).attr('id'),
                             // What is that data's value
-                            fieldValue = Google_Location.getFieldData(dataBinding, place);
+                            fieldValue = Instant_Locations.getFieldData(dataBinding, place);
 
                         $(this).val(fieldValue);
                     });
@@ -138,7 +138,7 @@
         }
     };
 
-    Google_Location.init();
+    Instant_Locations.init();
 
     //window.onload = function() {
     //    var startPos;

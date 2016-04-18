@@ -1,7 +1,7 @@
 <?php
 /*
-Plugin Name: Google Locations
-Plugin URI: http://googlelocations.com
+Plugin Name: Instant Locations
+Plugin URI: http://instantlocations.com
 Description: Powerful tool to interact with Google Maps Geolocation API and save location data
 Version: 1.0
 Author: Tan Nguyen
@@ -15,28 +15,28 @@ defined( 'ABSPATH' ) || exit;
 //----------------------------------------------------------
 //Define plugin URL for loading static files or doing AJAX
 //------------------------------------------------------------
-if ( ! defined( 'GL_URL' ) )
-	define( 'GL_URL', plugin_dir_url( __FILE__ ) );
+if ( ! defined( 'IL_URL' ) )
+	define( 'IL_URL', plugin_dir_url( __FILE__ ) );
 
-define( 'GL_JS_URL', trailingslashit( GL_URL . 'assets/js' ) );
-define( 'GL_CSS_URL', trailingslashit( GL_URL . 'assets/css' ) );
+define( 'IL_JS_URL', trailingslashit( IL_URL . 'assets/js' ) );
+define( 'IL_CSS_URL', trailingslashit( IL_URL . 'assets/css' ) );
 // ------------------------------------------------------------
 // Plugin paths, for including files
 // ------------------------------------------------------------
-if ( ! defined( 'GL_DIR' ) )
-	define( 'GL_DIR', plugin_dir_path( __FILE__ ) );
+if ( ! defined( 'IL_DIR' ) )
+	define( 'IL_DIR', plugin_dir_path( __FILE__ ) );
 
-define( 'GL_INC_DIR', trailingslashit( GL_DIR . 'inc' ) );
+define( 'IL_INC_DIR', trailingslashit( IL_DIR . 'inc' ) );
 
 // Load the plugin's main class and assets
-include GL_INC_DIR . 'helpers.php';
-include GL_INC_DIR . 'class-gl-migration.php';
-include GL_INC_DIR . 'class-gl-settings.php';
-include GL_INC_DIR . 'class-gl-meta-box.php';
-include GL_INC_DIR . 'class-gl-main.php';
+include IL_INC_DIR . 'helpers.php';
+include IL_INC_DIR . 'class-il-migration.php';
+include IL_INC_DIR . 'class-il-settings.php';
+include IL_INC_DIR . 'class-il-meta-box.php';
+include IL_INC_DIR . 'class-il-main.php';
 
-new GL_Main;
+new IL_Main;
 
-register_activation_hook( __FILE__, array( 'GL_Migration', 'up' ) );
+register_activation_hook( __FILE__, array( 'IL_Migration', 'up' ) );
 
-register_deactivation_hook( __FILE__, array( 'GL_Migration', 'down' ) );
+register_deactivation_hook( __FILE__, array( 'IL_Migration', 'down' ) );

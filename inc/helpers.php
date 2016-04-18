@@ -5,7 +5,7 @@
  * 
  * @return array
  */
-function gl_default_settings()
+function il_default_settings()
 {
 	$defaults = array(
 		// Allows user config geo auto complete
@@ -22,7 +22,7 @@ function gl_default_settings()
 		)
 	);
 
-	return apply_filters( 'google_locations', $defaults );
+	return apply_filters( 'il_default_settings', $defaults );
 }
 
 /**
@@ -32,11 +32,11 @@ function gl_default_settings()
  * 
  * @return Mixed
  */
-function gl_setting( $field = null )
+function il_setting( $field = null )
 {
  	$settings = get_option( 'google_locations' );
 
- 	$defaults = gl_default_settings();
+ 	$defaults = il_default_settings();
 
  	if ( empty( $settings ) || ! is_array( $settings ) )
  		$settings = $defaults;
@@ -53,41 +53,75 @@ function gl_setting( $field = null )
 	return null;
 }
 
-if ( ! function_exists('gl_set_data') )
+if ( ! function_exists('il_set_data') )
 {
-	function gl_set_data( $object_id, $address_component, $value, $object_type = 'post' )
+	function il_set_data( $object_id, $address_component, $value = '', $object_type = 'post' )
 	{
 		global $wpdb;
 
-		return $wpdb->update( $wpdb->prefix . 'locations', [$address_component => $value], compact( 'object_id', 'object_name' ) );
+		$object_id = intval( $object_id );
+
+		if ( ! is_array( $address_component ) && ! empty( $value ) )
+			$address_component = array($address_component => $value);
+
+		$has_data = $wpdb->get_var( $wpdb->prepare( "
+			SELECT 1 
+			FROM {$wpdb->prefix}locations 
+			WHERE object_id = %d
+			AND object_type = %s",
+			$object_id,
+			$object_type
+		) );
+
+		if ($has_data)
+			return $wpdb->update( $wpdb->prefix . 'locations', $address_component, compact( 'object_id', 'object_type' ) );
+		
+		$address_component['object_id'] 	= $object_id;
+		$address_component['object_type'] 	= $object_type;
+
+		return $wpdb->insert( $wpdb->prefix . 'locations', $address_component);
 	}
 }
 
-if ( ! function_exists( 'gl_post_set_data' ) ) 
+if ( ! function_exists( 'il_post_set_data' ) ) 
 {
-	function gl_post_set_data( $post_id, $address_component, $value )
+	function il_post_set_data( $post_id, $address_component, $value = '' )
 	{
-		return gl_set_data( $post_id, $address_component, $value );
+		return il_set_data( $post_id, $address_component, $value );
 	}
 }
 
-if ( ! function_exists( 'gl_get' ) )
+if ( ! function_exists( 'il_get_data' ) )
 {
-	function gl_get_data( $object_id, $address_component = null, $default = null)
+	function il_get_data( $object_id, $address_component = null, $object_type = 'post')
 	{
 		global $wpdb;
 
-		if ( null === $address_component )
-			return $wpdb->get_row('SELECT * FROM ' . $wpdb->prefix . 'locations WHERE id = ' . $object_id);
+		$object_type = $object_type === null || empty( $object_type ) ? 'post' : $object_type;
 
-		// Todo: Fix SQL Injection
-		if ( is_array($address_component) )
-		{
-			$address_component = implode(',', $address_component);
+		$location = $wpdb->get_row( $wpdb->prepare( "
+			SELECT * 
+			FROM {$wpdb->prefix}locations 
+			WHERE object_id = %d
+			AND object_type = %s
+			LIMIT 1
+			", $object_id, $object_type 
+		), ARRAY_A );
 
-			return $wpdb->get_row("SELECT $address_component FROM {$wpdb->prefix}locations WHERE id = {$object_id}");
-		}
+		if ( is_string( $address_component ) )
+			return $location[$address_component];
 
-		return $wpdb->get_var("SELECT $address_component FROM {$wpdb->prefix}locations WHERE id = {$object_id}");
+		return $location;
+	}
+}
+
+if ( ! function_exists( 'il_field' ) )
+{
+	function il_field( $data )
+	{
+		if ( isset( $data ) )
+			echo $data;
+
+		echo '';
 	}
 }

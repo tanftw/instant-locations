@@ -1,10 +1,10 @@
 <?php
 /**
- * Settings Page for Get Facebook Likes
+ * Settings Page for Instant Locations
  *
  * @author Tan Nguyen <tan@binaty.org>
  */
-class GL_Settings
+class IL_Settings
 {
 	/**
 	 * Constructor only to define hooks
@@ -26,10 +26,10 @@ class GL_Settings
 	public function admin_menu()
 	{
 		add_options_page( 
-			__( 'Google Locations', 'google-locations' ), 
-			__( 'Google Locations', 'google-locations' ), 
+			__( 'Instant Locations', 'instant-locations' ), 
+			__( 'Instant Locations', 'instant-locations' ), 
 			'manage_options', 
-			'google-locations', 
+			'instant-locations', 
 			array( $this, 'admin_page' ) 
 		);
 	}
@@ -43,11 +43,11 @@ class GL_Settings
 	{
 		register_setting( 'google_locations', 'google_locations_settings' );
 
-		if ( ! isset( $_POST['_page_now'] ) || $_POST['_page_now'] != 'google-locations' )
+		if ( ! isset( $_POST['_page_now'] ) || $_POST['_page_now'] != 'instant-locations' )
 			return;
 
 		$settings = array();
-		$defaults = gl_default_settings();
+		$defaults = il_default_settings();
 
 		foreach ( $defaults as $key => $value )
 		{
@@ -63,7 +63,7 @@ class GL_Settings
 		$settings['auto_add'] 	= isset( $_POST['auto_add'] ) ? true : false;
 		$settings['sdk_locale'] = trim( $_POST['sdk_locale'] );
 		
-		$settings = apply_filters( 'gl_settings_before_update', $settings );
+		$settings = apply_filters( 'il_settings_before_update', $settings );
 		
 		update_option( 'get_facebook_likes', $settings );
 
@@ -111,40 +111,40 @@ class GL_Settings
 		</script>
 
 		<div class="wrap">
-			<h2><?php _e( 'Google Locations', 'google-locations' ); ?></h2>
+			<h2><?php _e( 'Google Locations', 'instant-locations' ); ?></h2>
 			
 			<?php 
 			// Display success message when settings saved
 			if ( isset( $_GET['success'] ) ) : ?>
 			<div id="message" class="updated notice is-dismissible">
-				<p><?php _e( 'Settings <strong>saved</strong>.', 'google-locations' ); ?></p>
+				<p><?php _e( 'Settings <strong>saved</strong>.', 'instant-locations' ); ?></p>
 				<button type="button" class="notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span></button>
 			</div>
 			<?php endif; ?>
 			
 			<form action="options.php" method="post" id="poststuff">
-				<?php settings_fields( 'google-locations' ); ?>
+				<?php settings_fields( 'instant-locations' ); ?>
 				<div id="post-body" class="metabox-holder columns-2">
 					
 					<div id="postbox-container-2" class="postbox-container">
 						
 						<div class="meta-box-sortables">
 
-							<?php do_action( 'gl_before_general_settings' ); ?>
+							<?php do_action( 'il_before_general_settings' ); ?>
 
 							<div class="postbox">
 			                	<div class="handlediv" title="Click to toggle"> <br></div>
-			                  	<h3 class="hndle ui-sortable-handle"><?php _e( 'Auto Complete Settings', 'google-locations' ); ?></h3>
+			                  	<h3 class="hndle ui-sortable-handle"><?php _e( 'Auto Complete Settings', 'instant-locations' ); ?></h3>
 			                  	<div class="inside">
 			                    	<table class="form-table">
 			               
 			                    		<tr valign="top">
-			                    			<th><?php _e( 'Country', 'google-locations' ); ?></th>
+			                    			<th><?php _e( 'Country', 'instant-locations' ); ?></th>
 			                    			<td>
 			                    				<div>
 			                    					
 				                    				<label>
-														<input type="text" name="componentRestriction[country]" id="country" value="<?php echo gl_setting('bar'); ?>" />
+														<input type="text" name="componentRestriction[country]" id="country" value="<?php echo il_setting('bar'); ?>" />
 													</label>
 				                    				<p class="description">
 				                    					<?php 
@@ -156,7 +156,7 @@ class GL_Settings
 			                    		</tr>
 
 			                    		<tr valign="top">
-			                    			<th><?php _e( 'Types', 'google-locations' ); ?></th>
+			                    			<th><?php _e( 'Types', 'instant-locations' ); ?></th>
 			                    			<td>
 			                    				<div>
 			                    					<label>
@@ -188,16 +188,16 @@ class GL_Settings
 
 			              	<div class="postbox">
 			                	<div class="handlediv" title="Click to toggle"> <br></div>
-			                  	<h3 class="hndle ui-sortable-handle"><?php _e( 'Google Maps Settings', 'google-locations' ); ?></h3>
+			                  	<h3 class="hndle ui-sortable-handle"><?php _e( 'Google Maps Settings', 'instant-locations' ); ?></h3>
 			                  	<div class="inside">
 			                    	<table class="form-table">
 			                    		<tr valign="top">
-			                    			<th><?php _e( 'API Key', 'google-locations' ); ?></th>
+			                    			<th><?php _e( 'API Key', 'instant-locations' ); ?></th>
 			                    			<td>
 			                    				<div>
 
 				                    				<label>
-														<input type="text" name="api_key" id="api_key" value="<?php echo gl_setting('api_key'); ?>" />
+														<input type="text" name="api_key" id="api_key" value="<?php echo il_setting('api_key'); ?>" />
 													</label>
 				                    				<p class="description">
 				                    					<?php 
@@ -211,7 +211,33 @@ class GL_Settings
 			                  	</div><!--.inside-->
 			              	</div><!--.postbox-->
 
-			              	<?php do_action( 'gl_after_general_settings' ); ?>
+
+			              	<div class="postbox">
+			                	<div class="handlediv" title="Click to toggle"> <br></div>
+			                  	<h3 class="hndle ui-sortable-handle"><?php _e( 'Fields Settings', 'instant-locations' ); ?></h3>
+			                  	<div class="inside">
+			                    	<table class="form-table">
+			                    		<thead>
+			                    			<tr>
+			                    				<th>Field</th>
+			                    				<th>Show?</th>
+			                    				<th>Long Name?</th>
+			                    				<th>Title</th>		              
+			                    			</tr>
+			                    		</thead>
+			                    		<tbody>
+				                    		<tr>
+				                    			<td>administrative_area_level_1</td>
+				                    			<td><input type="checkbox"></td>
+				                    			<td><input type="checkbox"></td>
+				                    			<td>State</td>
+				                    		</tr>
+			                    		</tbody>
+			                    	</table>
+			                  	</div><!--.inside-->
+			              	</div><!--.postbox-->
+
+			              	<?php do_action( 'il_after_general_settings' ); ?>
 
 						</div><!--.metaboxes-->
 
@@ -220,7 +246,7 @@ class GL_Settings
 				</div><!--#post-body-->
 				<br class="clear">
 
-				<input type="hidden" name="_page_now" value="google-locations">
+				<input type="hidden" name="_page_now" value="instant-locations">
 				<?php submit_button(); ?>
 			</form>
 		</div>
@@ -228,4 +254,4 @@ class GL_Settings
 	}
 }
 
-new GL_Settings;
+new iL_Settings;

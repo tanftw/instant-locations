@@ -1,6 +1,6 @@
 <?php
 
-class GL_Meta_Box
+class IL_Meta_Box
 {
 	public function __construct()
 	{
@@ -26,8 +26,8 @@ class GL_Meta_Box
     public function add_metabox()
     {
         add_meta_box(
-            'google-locations',
-            __( 'Google Locations', 'textdomain' ),
+            'instant-locations',
+            __( '<span class="dashicons dashicons-location-alt"></span> Instant Locations', 'textdomain' ),
             array( $this, 'render_metabox' ),
             'post',
             'normal',
@@ -40,87 +40,89 @@ class GL_Meta_Box
      */
     public function render_metabox( $post ) 
     {
+    	$location = il_get_data( $post->ID );
     	?>
     	<div class="form-group row" id="form-group-address">
-			<input type="text" id="address" name="address" placeholder="Type an address to start auto populate...">
+			<input type="text" id="address" name="location[address]" value="<?php il_field( $location['address'] ); ?>" placeholder="Type an address to start auto populate...">
 		</div>
 		
 		<div class="form-group row">
 			<label class="form-label" for="country">Country</label>
-			<input type="text" name="country" class="form-control" id="country">
+			<input type="text" name="location[country]" value="<?php il_field( $location['country'] ); ?>" class="form-control" id="country">
 		</div>
 
 		<div class="form-group row">
 			<div class="column">
 				<label class="form-label" for="administrative_area_level_1">Administrative Area Level 1</label>
-				<input type="text" class="form-control" id="administrative_area_level_1">
+				<input type="text" class="form-control" id="administrative_area_level_1" name="location[administrative_area_level_1]" value="<?php il_field( $location['administrative_area_level_1'] ); ?>">
 			</div>
 
 			<div class="column">
 				<label class="form-label" for="administrative_area_level_2">Administrative Area Level 2</label>
-				<input type="text" class="form-control" id="administrative_area_level_2">
+				<input type="text" class="form-control" id="administrative_area_level_2" name="location[administrative_area_level_2]" value="<?php il_field( $location['administrative_area_level_2'] ); ?>">
 			</div>
 
 			<div class="column">
 				<label class="form-label" for="administrative_area_level_3">Administrative Area Level 3</label>
-				<input type="text" class="form-control" id="administrative_area_level_3">
+				<input type="text" class="form-control" id="administrative_area_level_3" name="location[administrative_area_level_3]" value="<?php il_field( $location['administrative_area_level_3'] ); ?>">
 			</div>
 		</div>
 
 		<div class="form-group row">
 			<div class="column">
 				<label class="form-label" for="administrative_area_level_4">Administrative Area Level 4</label>
-				<input type="text" class="form-control" id="administrative_area_level_4">
+				<input type="text" class="form-control" id="administrative_area_level_4" name="location[administrative_area_level_4]" value="<?php il_field( $location['administrative_area_level_4'] ); ?>">
 			</div>
 
 			<div class="column">
 				<label class="form-label" for="administrative_area_level_5">Administrative Area Level 5</label>
-				<input type="text" class="form-control" id="administrative_area_level_5">
+				<input type="text" class="form-control" id="administrative_area_level_5" name="location[administrative_area_level_5]" value="<?php il_field( $location['administrative_area_level_5'] ); ?>">
 			</div>
 		</div>
 
 		<div class="form-group row">
 			<label class="form-label" for="postal_code">Postal Code</label>
-			<input type="number" class="form-control" id="postal_code">
+			<input type="number" class="form-control" id="postal_code" name="location[postal_code]" value="<?php il_field( $location['postal_code'] ); ?>">
 		</div>
 		
 		<div class="form-group row">
 			<div class="column">
 				<label class="form-label" for="lat">Latitude</label>
-				<input type="text" class="form-control" id="lat">
+				<input type="text" class="form-control" id="lat" name="location[lat]" value="<?php il_field( $location['lat'] ); ?>">
 			</div>
 
 			<div class="column">
 				<label class="form-label" for="lng">Longitude</label>
-				<input type="text" class="form-control" id="lng">
+				<input type="text" class="form-control" id="lng" name="location[lng]" value="<?php il_field( $location['lng'] ); ?>">
 			</div>
 		</div>
 		
 		<div class="form-group row">
 			<div class="column">
 				<label class="form-label" for="street_number">Street Number</label>
-				<input type="text" class="form-control" id="street_number">
+				<input type="text" class="form-control" id="street_number" name="location[street_number]" value="<?php il_field( $location['street_number'] ); ?>">
 			</div>
 
 			<div class="column">
 				<label class="form-label" for="route">Route</label>
-				<input type="text" class="form-control" id="route">
+				<input type="text" class="form-control" id="route" name="location[route]" value="<?php il_field( $location['route'] ); ?>">
 			</div>
 		</div>
 
 		<div class="form-group row">
 			<label class="form-label" for="political">Political</label>
-			<input type="text" class="form-control" id="political">
+			<input type="text" class="form-control" id="political" name="location[political]" value="<?php il_field( $location['political'] ); ?>">
 		</div>
 
 		<div class="form-group row">
 			<label class="form-label" for="intersection">Intersection</label>
-			<input type="text" class="form-control" id="intersection">
+			<input type="text" class="form-control" id="intersection" name="location[intersection]" value="<?php il_field( $location['intersection'] ); ?>">
 		</div>
-
+		
+		<input type="hidden" name="foo" value="bar">
 		<?php
         // Add nonce for security and authentication.
-        wp_nonce_field( 'google_locations', 'google_locations_nonce_field' );
+        wp_nonce_field( 'instant_locations', 'instant_locations_nonce_field' );
     }
  
     /**
@@ -132,15 +134,11 @@ class GL_Meta_Box
      */
     public function save_metabox( $post_id, $post ) {
         // Add nonce for security and authentication.
-        $nonce_name   = isset( $_POST['google_locations_nonce_field'] ) ? $_POST['google_locations_nonce_field'] : '';
-        $nonce_action = 'google_locations';
+        $nonce_name   = isset( $_POST['instant_locations_nonce_field'] ) ? $_POST['instant_locations_nonce_field'] : '';
+        $nonce_action = 'instant_locations';
  
         // Check if nonce is set.
-        if ( ! isset( $nonce_name ) )
-            return;
- 
-        // Check if nonce is valid.
-        if ( ! wp_verify_nonce( $nonce_name, $nonce_action ) )
+        if ( ! isset( $nonce_name ) || ! wp_verify_nonce( $nonce_name, $nonce_action ) )
             return;
  
         // Check if user has permissions to save data.
@@ -148,17 +146,12 @@ class GL_Meta_Box
             return;
 
         // Check if not an autosave.
-        if ( wp_is_post_autosave( $post_id ) ) {
+        if ( wp_is_post_autosave( $post_id ) || wp_is_post_revision( $post_id ) )
             return;
-        }
- 
-        // Check if not a revision.
-        if ( wp_is_post_revision( $post_id ) ) {
-            return;
-        }
 
-        p($_POST);
+        if ( ! empty( $_POST['location'] ) )
+        	il_set_data( $post_id, $_POST['location'] );
     }
 }
 
-new GL_Meta_Box;
+new IL_Meta_Box;

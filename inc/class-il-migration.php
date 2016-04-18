@@ -1,8 +1,8 @@
 <?php
 
-class GL_Migration
+class IL_Migration
 {
-    public static $db_version = 1;
+    public static $db_version = 2;
 
     public static function check()
     {
@@ -24,6 +24,7 @@ class GL_Migration
 
             $sql = "CREATE TABLE {$table_name} (
                 id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+                address VARCHAR(255),
                 object_type VARCHAR(50) NOT NULL DEFAULT 'post',
                 object_id INT(11) UNSIGNED NOT NULL,
                 lat VARCHAR(30),
@@ -61,7 +62,8 @@ class GL_Migration
                 nearby text,
                 created_at timestamp DEFAULT CURRENT_TIMESTAMP,
                 updated_at timestamp,
-                PRIMARY KEY  (id)
+                PRIMARY KEY  (id),
+                UNIQUE KEY object_id_object_type(object_id, object_type)
             )
             COLLATE {$wpdb_collate}";
 
