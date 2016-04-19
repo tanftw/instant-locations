@@ -117,7 +117,7 @@ class IL_Settings
 													</label>
 				                    				<p class="description">
 				                    					<?php 
-				                    					_e( 'Enter country name in case you want to get the search results only in that country. For example <code>us</code>. Leaves blank if you not sure.' );
+				                    					_e( 'Enter country name in case you want to get the search results only in that country. For example <code>us</code>. Leaves blank to search in all countries.' );
 				                    					?>
 				                    				</p>
 			                    				</div>
@@ -135,7 +135,7 @@ class IL_Settings
 													<?php endforeach; ?>
 				                    				<p class="description">
 				                    					<?php 
-				                    					_e( 'Specifies an explicit type or a type collection. Select none if you not sure.' );
+				                    					_e( 'Specifies an explicit type or a type collection. Select none if you not sure.', 'instant-locations' );
 				                    					?>
 				                    				</p>
 			                    				</div>
@@ -160,7 +160,7 @@ class IL_Settings
 													</label>
 				                    				<p class="description">
 				                    					<?php 
-				                    					_e( 'Enter your API Key. For large application which have many request through Google Locations API. Not required.' );
+				                    					_e( 'Enter your API Key. For large application which have many requests through Google Locations API. Not required.', 'instant-locations' );
 				                    					?>
 				                    				</p>
 			                    				</div>

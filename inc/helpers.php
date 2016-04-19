@@ -11,15 +11,7 @@ function il_default_settings()
 		// Allows user config geo auto complete
 		'geo_config' => array(),
 
-		'api_key' => 'YOUR_API_KEY_HERE',
-
-		'fields' => array(
-			'administrative_area_level_1' => array(
-				'show' 		=> 1,
-				'title' 	=> 'State',
-				'long_name' => true
-			)
-		)
+		'api_key' => 'YOUR API KEY HERE',
 	);
 
 	return apply_filters( 'il_default_settings', $defaults );
@@ -53,80 +45,94 @@ function il_setting( $field = null )
 	return null;
 }
 
-if ( ! function_exists('il_set_data') )
+/**
+ * Set Location data for an Object
+ * 
+ * @param  Int $object_id   Object id
+ * @param  Mixed $address_component Address component. 
+ *         If it's a key => value. Then forget $value param.
+ * @param  string $value Value to set.
+ * @param  string $object_type Object type. Supports `post`, `user`, `comment`
+ * 
+ * @return bool Update status
+ */
+function il_set_data( $object_id, $address_component, $value = '', $object_type = 'post' )
 {
-	function il_set_data( $object_id, $address_component, $value = '', $object_type = 'post' )
-	{
-		global $wpdb;
+	global $wpdb;
 
-		$object_id = intval( $object_id );
+	$object_id = intval( $object_id );
 
-		if ( ! is_array( $address_component ) && ! empty( $value ) )
-			$address_component = array($address_component => $value);
+	// If address component is the string of column name. Change it to array
+	if ( ! is_array( $address_component ) && ! empty( $value ) )
+		$address_component = array($address_component => $value);
 
-		if ( isset( $address_component['lat'] ) && isset( $address_component['lng'] ) )
-			$address_component['geometry'] = $address_component['lat'] . ',' . $address_component['lng'];
+	// Set `geometry` column value for users who need it 
+	if ( isset( $address_component['lat'] ) && isset( $address_component['lng'] ) )
+		$address_component['geometry'] = $address_component['lat'] . ',' . $address_component['lng'];
 
+	// Check if has data. Because we won't use $wpdb->replace() method
+	$has_data = $wpdb->get_var( $wpdb->prepare( "
+		SELECT 1 
+		FROM {$wpdb->prefix}locations 
+		WHERE object_id = %d
+		AND object_type = %s",
+		$object_id,
+		$object_type
+	) );
 
+	// If record already been added. Then update it.
+	if ($has_data)
+		return $wpdb->update( $wpdb->prefix . 'locations', $address_component, compact( 'object_id', 'object_type' ) );
+	
+	// Otherwise. Just add it.
+	$address_component['object_id'] 	= $object_id;
+	$address_component['object_type'] 	= $object_type;
 
-		$has_data = $wpdb->get_var( $wpdb->prepare( "
-			SELECT 1 
-			FROM {$wpdb->prefix}locations 
-			WHERE object_id = %d
-			AND object_type = %s",
-			$object_id,
-			$object_type
-		) );
-
-		if ($has_data)
-			return $wpdb->update( $wpdb->prefix . 'locations', $address_component, compact( 'object_id', 'object_type' ) );
-		
-		$address_component['object_id'] 	= $object_id;
-		$address_component['object_type'] 	= $object_type;
-
-		return $wpdb->insert( $wpdb->prefix . 'locations', $address_component);
-	}
+	return $wpdb->insert( $wpdb->prefix . 'locations', $address_component);
 }
 
-if ( ! function_exists( 'il_post_set_data' ) ) 
+/**
+ * Get location data of an object
+ * 
+ * @param  Int $object_id  An object id
+ * @param  Mixed $address_component Address component to get data. If it's string, then return column value. Otherwise, return whole record.
+ * @param  string $object_type  Object type. Default `post`
+ * 
+ * @return Array Location data
+ */
+function il_get_data( $object_id, $address_component = null, $object_type = 'post')
 {
-	function il_post_set_data( $post_id, $address_component, $value = '' )
-	{
-		return il_set_data( $post_id, $address_component, $value );
-	}
+	global $wpdb;
+
+	$object_type = $object_type === null || empty( $object_type ) ? 'post' : $object_type;
+
+	$location = $wpdb->get_row( $wpdb->prepare( "
+		SELECT * 
+		FROM {$wpdb->prefix}locations 
+		WHERE object_id = %d
+		AND object_type = %s
+		LIMIT 1
+		", $object_id, $object_type 
+	), ARRAY_A );
+
+	if ( is_string( $address_component ) )
+		return $location[$address_component];
+
+	return $location;
 }
 
-if ( ! function_exists( 'il_get_data' ) )
+
+/**
+ * Print data if isset or print empty string
+ * 
+ * @param  String $data String to print
+ * 
+ * @return void
+ */
+function il_field( $data )
 {
-	function il_get_data( $object_id, $address_component = null, $object_type = 'post')
-	{
-		global $wpdb;
-
-		$object_type = $object_type === null || empty( $object_type ) ? 'post' : $object_type;
-
-		$location = $wpdb->get_row( $wpdb->prepare( "
-			SELECT * 
-			FROM {$wpdb->prefix}locations 
-			WHERE object_id = %d
-			AND object_type = %s
-			LIMIT 1
-			", $object_id, $object_type 
-		), ARRAY_A );
-
-		if ( is_string( $address_component ) )
-			return $location[$address_component];
-
-		return $location;
-	}
-}
-
-if ( ! function_exists( 'il_field' ) )
-{
-	function il_field( $data )
-	{
-		if ( isset( $data ) )
-			echo $data;
-		else
-			echo '';
-	}
+	if ( isset( $data ) )
+		echo $data;
+	else
+		echo '';
 }

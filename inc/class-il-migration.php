@@ -1,15 +1,26 @@
 <?php
-
+/**
+ * Setup and migrate data each time db has update
+ */
 class IL_Migration
 {
-    public static $db_version = 2;
+    // Current database version
+    public static $db_version = 1;
 
+    /**
+     *  Check if database has updated. Then run self::up() method
+     */
     public static function check()
     {
         if ( get_site_option( 'gl_db_version' ) != self::$db_version )
             self::up();
     }
 
+    /**
+     * Create or change table structure when database has updated
+     * 
+     * @return void
+     */
     public static function up()
     {
         global $wpdb;
@@ -73,8 +84,13 @@ class IL_Migration
         }
     }
 
+    /**
+     * Remove plugin settings on activate. But keep plugin data in case user accidented deactivate plugin. 
+     * 
+     * @return void
+     */
     public static function down()
     {
-        // Do nothing
+        delete_option( 'instant_locations' );
     }
 }

@@ -1,2 +1,2 @@
-# wp-post-location
+# Instant Location
 All are secret until official release ;)

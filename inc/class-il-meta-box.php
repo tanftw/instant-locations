@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * Register and Processing a Instant Locations meta box in post editing screen 
+ *
+ * @author Tan Nguyen <tan@binaty.org>
+ */
 class IL_Meta_Box
 {
 	public function __construct()
@@ -17,6 +21,7 @@ class IL_Meta_Box
     public function init_metabox() 
     {
         add_action( 'add_meta_boxes', array( $this, 'add_metabox'  ) );
+
         add_action( 'save_post', array( $this, 'save_metabox' ), 10, 2 );
     }
  
@@ -25,6 +30,7 @@ class IL_Meta_Box
      */
     public function add_metabox()
     {
+    	// Add Instant Locations meta box
         add_meta_box(
             'instant-locations',
             __( '<span class="dashicons dashicons-location-alt"></span> Instant Locations', 'instant-locations' ),
@@ -40,6 +46,7 @@ class IL_Meta_Box
      */
     public function render_metabox( $post ) 
     {
+    	// Get location data if exists
     	$location = il_get_data( $post->ID );
     	?>
     	<div class="form-group row" id="form-group-address">
@@ -119,7 +126,8 @@ class IL_Meta_Box
 			<input type="text" class="form-control" id="intersection" name="location[intersection]" value="<?php il_field( $location['intersection'] ); ?>">
 		</div>
 
-		<?php 
+		<?php
+		// These fields belows are hidden field. We need to pass data to it before saving to database
 		$hidden_fields = array('street_address', 'colloquial_area', 'locality', 'sublocality', 'ward', 'neighborhood',
 			'premise', 'subpremise', 'natural_feature', 'airport', 'park', 'point_of_interest', 'post_box', 'floor',
 			'room', 'formatted_address', 'location_id', 'url');
