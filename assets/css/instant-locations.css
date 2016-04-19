@@ -13,8 +13,17 @@
 	margin-right: 2%;
 	display: inline-block;
 }
+
 .row .column:last-child{
 	margin-right: 0;
+}
+
+@media (max-width: 1800px){
+	.form-label{
+		display: block;
+		width: 100%;
+		clear: both;
+	}
 }
 
 #address {

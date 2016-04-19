@@ -2,7 +2,7 @@
 /*
 Plugin Name: Instant Locations
 Plugin URI: http://instantlocations.com
-Description: Powerful tool to interact with Google Maps Geolocation API and save location data
+Description: Instant & Auto populate location data with the power of Google Maps API.
 Version: 1.0
 Author: Tan Nguyen
 Author URI: https://www.binaty.org

@@ -16,7 +16,7 @@ Imagine you have to enter information for shops, hotels, or companies... you’d
 Instant Locations interacts with Google Maps API and automatically populates location data into your fields. Now you only have to type the desired address, verify it by the auto-suggested addresses from Google Maps API and then select the correct one from dropdown. All other fields’ values (post code, street, state, country, …) will be automatically filled in instantly.
 
 See how it works
-[]
+![Instant Locations](http://binaty.org/images/instant-locations.gif)
 
 
 ### Who need to use it?

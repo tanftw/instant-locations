@@ -33,7 +33,7 @@ class IL_Meta_Box
     	// Add Instant Locations meta box
         add_meta_box(
             'instant-locations',
-            __( '<span class="dashicons dashicons-location-alt"></span> Instant Locations', 'instant-locations' ),
+            '<span class="dashicons dashicons-location-alt"></span> ' . __( 'Instant Locations', 'instant-locations' ),
             array( $this, 'render_metabox' ),
             'post',
             'normal',
@@ -73,9 +73,7 @@ class IL_Meta_Box
 				<label class="form-label" for="administrative_area_level_3">Administrative Area Level 3</label>
 				<input type="text" class="form-control" id="administrative_area_level_3" name="location[administrative_area_level_3]" value="<?php il_field( $location['administrative_area_level_3'] ); ?>">
 			</div>
-		</div>
-
-		<div class="form-group row">
+		
 			<div class="column">
 				<label class="form-label" for="administrative_area_level_4">Administrative Area Level 4</label>
 				<input type="text" class="form-control" id="administrative_area_level_4" name="location[administrative_area_level_4]" value="<?php il_field( $location['administrative_area_level_4'] ); ?>">
